@@ -31,4 +31,9 @@ class DevisionController extends Controller
             return false;
         }
     }
+    public function new()
+    {
+        $devisions = Devision::get()->all();
+        return view('backend.components.devisions.new', compact('devisions'));
+    }
 }

@@ -6,7 +6,7 @@
                 <div class="col-md-12">
                     <div class="card">
                         <div class="card-header text-center">
-                            <h3>Select Area</h3>
+                            <h3>Add New Thana</h3>
                         </div>
                         <div class="card-body">
                             <div class="row">
@@ -39,9 +39,7 @@
                                     <h3 class="">Area Details</h3>
                                 </div>
                                 <div class="col-md-6 text-right">
-                                    <a href="{{ url('/new/thana') }}">
-                                        <button class="btn btn-primary btn-sm">New</button>
-                                    </a>
+                                    <button class="btn btn-primary btn-sm">New</button>
                                 </div>
                             </div>
                         </div>
@@ -56,7 +54,7 @@
                                         <th>Action</th>
                                     </tr>
                                 </thead>
-                                <tbody id="table-data">
+                                <tbody id="data-table">
                                     
                                 </tbody>
                             </table>
@@ -69,39 +67,24 @@
 </x-admin-layout>
 <script>
     $(document).ready(function(){
-       function dropdownData(){
         $("#devision").change(function() {
             var id = $("#devision").val();
-            getDistrict(id);
+            getDistrictData(id);
         });
-        function getDistrict(devision_id){
-            // alert(devision_id);
-            axios.post('/getDistrict', {id:devision_id})
-            .then(function(response){
-                $("#district").empty();
-                $("#table-data").empty();
-                if(response.status == 200){
-                    var data = response.data;
-                    console.log(data);
-                    $.each(data, function(i, item){
-                        $("<option>").html(
-                            "<option value="+ data[i].id +">" + data[i].district_name +"</option>"
-                            ).appendTo("#district");
-                        $("<tr>").html(
-                            "<td>" + i + "</td>" +
-                            "<td>" + data[i].devision_name + "</td>" +
-                            "<td>" + data[i].district_name + "</td>"
-                        ).appendTo("#table-data");
-                    });
-                }else {
-                    alert('Failed');
-                }
+        function getDistrictData(devision_id){
+            const url = '/getDistrict'
+            axios.post(url, {id:devision_id})
+            .then(function(res){
+                var data = res.data;
+                $.each(data, function(i, item){
+                    $("<option>").html(
+                        "<option>" + data[i].district_name +"</option>"
+                    ).appendTo("#district");
+                })
             })
             .catch(function(error){
-                
+                return "false";
             })
         }
-       }
-       dropdownData();
     });
 </script>

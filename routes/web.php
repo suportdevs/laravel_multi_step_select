@@ -23,4 +23,5 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
 })->name('dashboard');
 
 Route::get('/devisions', [DevisionController::class, 'index'])->name('devisions');
-Route::post('/district', [DevisionController::class, 'getDistrict']);
+Route::post('/getDistrict', [DevisionController::class, 'getDistrict']);
+Route::get('new/thana', [DevisionController::class, 'new']);
