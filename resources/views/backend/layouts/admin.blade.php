@@ -10,7 +10,8 @@
 
     <!-- GOOGLE FONTS -->
     <link href="https://fonts.googleapis.com/css?family=Montserrat:400,500|Poppins:400,500,600,700|Roboto:400,500" rel="stylesheet" />
-    <!-- <link href="https://cdn.materialdesignicons.com/3.0.39/css/materialdesignicons.min.css" rel="stylesheet" /> -->
+    <!-- metarial design icon css -->
+    <link href="https://cdn.materialdesignicons.com/3.0.39/css/materialdesignicons.min.css" rel="stylesheet" />
 
     <!-- Bootstrap -->
     <link href="{{ asset('backend/assets/plugins/bootstrap/css/bootstrap.min.css') }}"/>

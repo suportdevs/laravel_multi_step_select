@@ -2,20 +2,15 @@
 
 namespace App\Models;
 
-use App\Models\District;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Devision extends Model
+class Thana extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'devisions_name'
+        'district_id',
+        'thana_name'
     ];
-
-    public function devision()
-    {
-        return $this->belongsToMany(District::class);
-    }
 }
