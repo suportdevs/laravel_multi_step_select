@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Devision;
 use App\Models\District;
-use App\Models\Thana;
+use App\Models\Upazila;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -15,7 +15,8 @@ class DevisionController extends Controller
         $devisions = Devision::latest()->get();
         $result = DB::table('devisions')
                     ->join('districts', 'devisions.id', '=', 'districts.devision_id')
-                    ->select('devisions.*', 'districts.*')
+                    ->join('upazilas', 'districts.id', '=', 'upazilas.district_id')
+                    ->select('devisions.*', 'districts.*', 'upazilas.*')
                     ->get();
         return view('backend.components.devisions.index', compact('devisions', 'result'));
     }
@@ -23,8 +24,7 @@ class DevisionController extends Controller
     public function getDistrict(Request $request)
     {
         $id = $request->input('id');
-        $result = DB::table('devisions')
-                    ->join('districts','devisions.id','=','districts.devision_id')
+        $result = Devision::join('districts','devisions.id','=','districts.devision_id')
                     ->where('devisions.id', $id)
                     ->get();
         return ($result == true) ? $result : false;
@@ -32,18 +32,23 @@ class DevisionController extends Controller
     public function create()
     {
         $devisions = Devision::latest()->get();
-        $districts = District::latest()->get();
-        // $result = Devision::join('districts', 'devisions.id', '=', 'districts.devision_id')
-        //             ->select('devisions.*', 'districts.*')
-        //             ->get();
-        return view('backend.components.devisions.create', compact('devisions', 'districts'));
+        return view('backend.components.devisions.create', compact('devisions'));
     }
     public function insert(Request $request)
     {
-        Thana::insert([
+        Upazila::insert([
             'district_id' => $request->district,
-            'thana_name' => $request->thana,
+            'upazila_name' => $request->upazila,
         ]);
         return Redirect()->back()->with('status', 'Information added Successfull.');
+    }
+    public function getUpazila(Request $request)
+    {
+        $id = $request->input('id');
+        $result = Devision::join('districts','devisions.id','=','districts.devision_id')
+                    ->join('upazilas', 'districts.id', '=', 'upazilas.district_id')
+                    ->where('districts.id', $id)
+                    ->get();
+        return ($result == true) ? $result : false;
     }
 }

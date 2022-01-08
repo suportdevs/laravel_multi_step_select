@@ -27,8 +27,8 @@
                                 </div>
                                 <div class="col-md-4">
                                     <label for="">Thana</label>
-                                    <select id="thana" class="form-control">
-                                        <option type="hidden" value="">Select Any District</option>
+                                    <select id="upazila" class="form-control">
+                                        <option type="hidden" value="">Select Any Upazila</option>
                                     </select>
                                 </div>
                             </div>
@@ -45,7 +45,7 @@
                                     <h3 class="">Area Details</h3>
                                 </div>
                                 <div class="col-md-6 text-right">
-                                    <a href="{{ url('/add/new/thana') }}">
+                                    <a href="{{ url('/add/new/upazila') }}">
                                         <button class="btn btn-primary btn-sm"><span class="mdi mdi-plus-outline"></span> New</button>
                                     </a>
                                 </div>
@@ -58,6 +58,7 @@
                                         <th>No</th>
                                         <th>Devision</th>
                                         <th>District</th>
+                                        <th>Upazila</th>
                                         <th class="text-right">Action</th>
                                     </tr>
                                 </thead>
@@ -68,9 +69,10 @@
                                         <td>{{ $i++ }}</td>
                                         <td>{{ $data->devision_name }}</td>
                                         <td>{{ $data->district_name }}</td>
+                                        <td>{{ $data->upazila_name }}</td>
                                         <td class="text-right">
-                                            <a href="" class="btn btn-primary btn-sm">Edit</a>
-                                            <a href="" class="btn btn-danger btn-sm">Delete</a>
+                                            <a href="{{ url('/upazila/edit/'.$data->id) }}" class="btn btn-primary btn-sm"><span class="mdi mdi-wrench"></span></a>
+                                            <a href="" class="btn btn-danger btn-sm"><span class="mdi mdi-trash-can"></span></a>
                                         </td>
                                     </tr>
                                     @endforeach
@@ -85,52 +87,67 @@
 </x-admin-layout>
 <script>
     $(document).ready(function(){
-        
-        // axios.get('/devisions')
-        // .then(function(res){
-        //     console.log(res.data);
-        // })
-        // .catch(function(error){
-        //     console.log(error);
-        // })
        function dropdownData(){
         $("#devision").change(function() {
             var id = $("#devision").val();
             getDistrict(id);
         });
-        function getDistrict(devision_id){
-            // alert(devision_id);
+
+        const getDistrictData = (data) => {
+            const district = document.querySelector("#district");
+            district.innerHTML = data.map(item => `<option value=${item.id}>${item.district_name}</option>`).join(' ');
+            return district;
+        };
+
+        const getTableData = (data) => {
+            const tableData = document.querySelector("#table-data");
+            tableData.innerHTML = data.map(item => `<tr>
+                <td>${item.id}</td>
+                <td>${item.devision_name}</td>
+                <td>${item.district_name}</td>
+                <td>${item.upazila_name}</td>
+                <td class='text-right'>
+                    <a href='{{ url('upazila/edit/${item.id}') }}' class='btn btn-primary btn-sm'><span class='mdi mdi-wrench'></span></a>
+                    <a href='#' class='btn btn-danger btn-sm'><span class='mdi mdi-trash-can'></span></a>
+                </td>
+                </tr>
+            `).join(' ');
+            return tableData;
+        }
+
+        const getDistrict = (devision_id) => {
             axios.post('/getDistrict', {id:devision_id})
-            .then(function(response){
+            .then(response => {
                 $("#district").empty();
                 $("#table-data").empty();
-                if(response.status == 200){
-                    var data = response.data;
-                    console.log(data);
-                    $.each(data, function(i, item){
-                        $("<option>").html(
-                            "<option data-id="+ data[i].id +">" + data[i].district_name +"</option>"
-                            ).appendTo("#district");
-                        $("<tr>").html(
-                            "<td>" + i + "</td>" +
-                            "<td>" + data[i].devision_name + "</td>" +
-                            "<td>" + data[i].district_name + "</td>" +
-                            "<td><a href='' class='btn btn-primary btn-sm text-right'>Edit</a><a href='' class='btn btn-danger btn-sm text-right'>Delete</a></td>"
-                        ).appendTo("#table-data");
-                    });
-                }else {
-                    alert('Failed');
-                }
+                
+                var data = response.data;
+                getDistrictData(data);
+                getTableData(data);
             })
             .catch(function(error){
-                
+                document.write("Something went Wrong!");
             })
         }
-        $("#district").change(function(){
-            const id = $(this).attr('data-id');
-            alert(id);
-        })
-       }
+        $("#district").change(() => {
+            const id = $("#district").val();
+            getUpazila(id);
+        });
+        const getUpazilaDropdown = (data) => {
+            const upazilaId = document.querySelector("#upazila");
+            upazilaId.innerHTML = data.map(item => `<option value='${item.id}>${item.upazila_name}</option>`)
+        }
+        // const get
+        const getUpazila = (district_id) => {
+            axios.post('/getUpazila', {id:district_id})
+            .then(response => {
+                let upazilaData = response.data;
+                getUpazilaDropdown(upazilaData);
+                getTableData(upazilaData);
+            })
+        }
+    }
+       
        dropdownData();
     });
 </script>

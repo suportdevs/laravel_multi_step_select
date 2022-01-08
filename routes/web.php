@@ -24,5 +24,7 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
 
 Route::get('/devisions', [DevisionController::class, 'index'])->name('devisions');
 Route::post('/getDistrict', [DevisionController::class, 'getDistrict']);
-Route::get('/add/new/thana', [DevisionController::class, 'create']);
-Route::post('/insert/thana', [DevisionController::class, 'insert'])->name('insert.thana');
+Route::get('/add/new/upazila', [DevisionController::class, 'create']);
+Route::post('/insert/upazila', [DevisionController::class, 'insert'])->name('insert.upazila');
+Route::post('/getUpazila', [DevisionController::class, 'getUpazila']);
+Route::get('/upazila/edit/{id}', [DevisionController::class, 'edit']);
